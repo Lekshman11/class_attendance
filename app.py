@@ -10,8 +10,8 @@ app = Flask(__name__)
 app.secret_key = "attendance_secret"
 
 # Attendance time window
-OPEN_TIME = time(8, 0)
-CLOSE_TIME = time(22, 45)
+OPEN_TIME = time(7, 30)
+CLOSE_TIME = time(9, 45)
 
 # Admin credentials
 ADMIN_USERNAME = "admin"
