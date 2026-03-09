@@ -80,7 +80,7 @@ def mark():
 
     if not student:
         conn.close()
-        return "Invalid Register Number"
+        return render_template("invalid.html")
 
     # Check duplicate attendance
     cursor.execute(
@@ -92,7 +92,7 @@ def mark():
 
     if existing:
         conn.close()
-        return "Attendance already marked"
+        return render_template("already_marked.html")
 
     # Insert attendance
     cursor.execute(
