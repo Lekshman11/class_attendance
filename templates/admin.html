@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — AI&amp;DS Attendance</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="dash-wrapper">
+
+  <!-- ===== Top Bar ===== -->
+  <header class="topbar">
+    <div class="topbar-brand">
+      <span>🎓</span>
+      <span>AI&amp;DS Attendance</span>
+      <span class="badge">ADMIN</span>
+    </div>
+    <div class="topbar-date" id="today-date"></div>
+    <a class="btn-logout" href="/logout">
+      🚪 Logout
+    </a>
+  </header>
+
+
+  <!-- ===== Main Content ===== -->
+  <main class="dash-content">
+
+    <h2 class="dash-title">Attendance Dashboard</h2>
+    <p class="dash-sub" id="dash-sub-date">Today's overview</p>
+
+
+    <!-- ===== Stats Grid ===== -->
+    <div class="stats-grid">
+
+      <div class="stat-card total">
+        <div class="stat-icon blue">👥</div>
+        <div class="stat-value">{{ total_students }}</div>
+        <div class="stat-label">Total Students</div>
+      </div>
+
+      <div class="stat-card present">
+        <div class="stat-icon green">✅</div>
+        <div class="stat-value">{{ present_count }}</div>
+        <div class="stat-label">Present</div>
+      </div>
+
+      <div class="stat-card absent">
+        <div class="stat-icon red">❌</div>
+        <div class="stat-value">{{ absent_count }}</div>
+        <div class="stat-label">Absent</div>
+      </div>
+
+      <div class="stat-card percent">
+        <div class="stat-icon amber">📊</div>
+        <div class="stat-value">{{ percentage }}%</div>
+        <div class="stat-label">Attendance %</div>
+      </div>
+
+    </div>
+
+
+    <!-- ===== Tables Grid ===== -->
+    <div class="tables-grid">
+
+      <!-- Present Table -->
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title">
+            ✅ Present Students
+            <span class="table-badge badge-green">{{ present_count }}</span>
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Reg No</th>
+                <th>Name</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if present %}
+                {% for row in present %}
+                <tr>
+                  <td class="td-reg">{{ row[0] }}</td>
+                  <td>{{ row[1] }}</td>
+                  <td class="td-time">{{ row[2] }}</td>
+                </tr>
+                {% endfor %}
+              {% else %}
+                <tr>
+                  <td colspan="3">
+                    <div class="empty-state">
+                      <div class="empty-icon">🙁</div>
+                      No students present yet today
+                    </div>
+                  </td>
+                </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Absent Table -->
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title">
+            ❌ Absent Students
+            <span class="table-badge badge-red">{{ absent_count }}</span>
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Reg No</th>
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if absent %}
+                {% for row in absent %}
+                <tr>
+                  <td class="td-reg">{{ row[0] }}</td>
+                  <td>{{ row[1] }}</td>
+                </tr>
+                {% endfor %}
+              {% else %}
+                <tr>
+                  <td colspan="2">
+                    <div class="empty-state">
+                      <div class="empty-icon">🎉</div>
+                      All students are present!
+                    </div>
+                  </td>
+                </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /tables-grid -->
+
+  </main>
+</div>
+
+
+<script>
+  // Show today's date in topbar and sub-heading
+  const now = new Date();
+  const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+  const dateStr = now.toLocaleDateString('en-IN', opts);
+  document.getElementById('today-date').textContent  = dateStr;
+  document.getElementById('dash-sub-date').textContent = dateStr;
+</script>
+
+</body>
+</html>
