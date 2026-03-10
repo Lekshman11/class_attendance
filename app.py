@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
-from datetime import datetime, time
+from datetime import datetime, time ,timedelta
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -24,8 +24,7 @@ ADMIN_PASSWORD = "1234"
 @app.route("/")
 def index():
 
-    now = datetime.now().time()
-
+now = (datetime.utcnow() + timedelta(hours=5, minutes=30)).time()
     if now < OPEN_TIME or now > CLOSE_TIME:
         return render_template("closed.html")
 
@@ -64,8 +63,9 @@ def mark():
 
     reg_no = request.form["reg_no"].upper()
 
-    today = str(datetime.now().date())
-    now_time = datetime.now().strftime("%H:%M:%S")
+    ist_now = datetime.utcnow() + timedelta(hours=5, minutes=30)
+    today = str(ist_now.date())
+    now_time = ist_now.strftime("%H:%M:%S")
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -134,9 +134,9 @@ def admin():
 
     if "admin" not in session:
         return redirect("/admin_login")
-
-    today = str(datetime.now().date())
-
+        
+        
+    today = str((datetime.utcnow() + timedelta(hours=5, minutes=30)).date())
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
@@ -203,8 +203,7 @@ def logout():
 @app.route("/check-time")
 def check_time():
     from datetime import datetime
-    return str(datetime.now())
-
+    return str(datetime.utcnow() + timedelta(hours=5, minutes=30))
 
 # ----------------------------
 # Run App
