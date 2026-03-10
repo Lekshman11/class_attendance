@@ -23,8 +23,7 @@ ADMIN_PASSWORD = "1234"
 # ----------------------------
 @app.route("/")
 def index():
-
-now = (datetime.utcnow() + timedelta(hours=5, minutes=30)).time()
+    now = (datetime.utcnow() + timedelta(hours=5, minutes=30)).time()
     if now < OPEN_TIME or now > CLOSE_TIME:
         return render_template("closed.html")
 
