@@ -1,111 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI&amp;DS Attendance Portal</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
 
-<div class="page-center">
-  <div class="card">
+  <div class="page-center">
+    <div class="card">
 
-    <!-- Logo -->
-    <div class="card-logo">🎓</div>
-    <h1>AI&amp;DS Attendance</h1>
-    <p class="card-subtitle">Mark your attendance quickly and securely</p>
+      <!-- Logo -->
+      <div class="card-logo">🎓</div>
+      <h1>AI&amp;DS Attendance</h1>
+      <p class="card-subtitle">Mark your attendance quickly and securely</p>
 
-    <!-- Flash / status messages (JS-injected) -->
-    <div id="status-msg" style="display:none"></div>
+      <!-- Status message (JS-injected) -->
+      <div id="status-msg" style="display:none"></div>
 
-    <form id="attendance-form" action="/mark" method="post">
+      <form id="attendance-form" action="/mark" method="post">
 
-      <div class="form-group">
-        <label for="reg_no">Register Number</label>
-        <input
-          type="text"
-          id="reg_no"
-          name="reg_no"
-          placeholder="e.g. SPR22CS001"
-          autocomplete="off"
-          autocapitalize="characters"
-          style="text-transform:uppercase"
-          required
-        >
-      </div>
+        <!-- Hidden field holding the chosen status -->
+        <input type="hidden" name="status" id="status-field" value="">
 
-      <div class="form-group">
-        <label for="name">Student Name</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          placeholder="Auto-filled after entering register number"
-          readonly
-        >
-      </div>
+        <div class="form-group">
+          <label for="reg_no">Register Number</label>
+          <input type="text" id="reg_no" name="reg_no" placeholder="e.g. 23AD00_" autocomplete="off"
+            autocapitalize="characters" style="text-transform:uppercase" required>
+        </div>
 
-      <button type="submit" class="btn btn-primary" id="submit-btn">
-        ✅&nbsp; Mark Attendance
-      </button>
+        <div class="form-group">
+          <label for="name">Student Name</label>
+          <input type="text" id="name" name="name" placeholder="Auto-filled after entering register number" readonly>
+        </div>
 
-    </form>
+        <!-- Two action buttons -->
+        <div class="btn-group">
+          <button type="button" class="btn btn-primary" id="btn-present" onclick="submitAs('present')">
+            ✅&nbsp; Mark Present
+          </button>
+          <button type="button" class="btn btn-absent" id="btn-absent" onclick="submitAs('absent')">
+            ❌&nbsp; Mark Absent
+          </button>
+        </div>
 
-    <a class="link-subtle" href="/admin_login">
-      <span>Admin Login</span> →
-    </a>
+      </form>
 
+      <a class="link-subtle" href="/admin_login">
+        <span>Admin Login</span> →
+      </a>
+
+    </div>
   </div>
-</div>
 
 
-<script>
-  const regInput  = document.getElementById('reg_no');
-  const nameInput = document.getElementById('name');
-  const statusMsg = document.getElementById('status-msg');
-  const submitBtn = document.getElementById('submit-btn');
+  <script>
+    const regInput = document.getElementById('reg_no');
+    const nameInput = document.getElementById('name');
+    const statusMsg = document.getElementById('status-msg');
+    const form = document.getElementById('attendance-form');
+    const statusFld = document.getElementById('status-field');
 
-  function showStatus(msg, type) {
-    statusMsg.className = 'alert alert-' + type;
-    statusMsg.textContent = msg;
-    statusMsg.style.display = 'flex';
-  }
-
-  // Fetch student name on input (live) and on blur
-  function fetchName() {
-    const reg = regInput.value.trim();
-    if (reg.length < 3) {
-      nameInput.value = '';
-      return;
+    function showStatus(msg, type) {
+      statusMsg.className = 'alert alert-' + type;
+      statusMsg.textContent = msg;
+      statusMsg.style.display = 'flex';
     }
-    fetch('/get_name?reg_no=' + encodeURIComponent(reg))
-      .then(r => r.json())
-      .then(data => {
-        nameInput.value = data.name || '';
-        if (data.name) {
-          statusMsg.style.display = 'none';
-        } else if (reg.length >= 8) {
-          showStatus('⚠️ Register number not found. Please check and retry.', 'error');
-        }
-      })
-      .catch(() => {});
-  }
 
-  regInput.addEventListener('input', fetchName);
-  regInput.addEventListener('blur',  fetchName);
-
-  // Show loading state while submitting
-  document.getElementById('attendance-form').addEventListener('submit', function () {
-    if (!nameInput.value) {
-      showStatus('⚠️ No student found for this register number.', 'error');
-      event.preventDefault();
-      return;
+    function fetchName() {
+      const reg = regInput.value.trim();
+      if (reg.length < 3) { nameInput.value = ''; return; }
+      fetch('/get_name?reg_no=' + encodeURIComponent(reg))
+        .then(r => r.json())
+        .then(data => {
+          nameInput.value = data.name || '';
+          if (data.name) {
+            statusMsg.style.display = 'none';
+          } else if (reg.length >= 8) {
+            showStatus('⚠️ Register number not found. Please check and retry.', 'error');
+          }
+        })
+        .catch(() => { });
     }
-    submitBtn.textContent = '⏳ Marking…';
-    submitBtn.disabled   = true;
-  });
-</script>
+
+    regInput.addEventListener('input', fetchName);
+    regInput.addEventListener('blur', fetchName);
+
+    function submitAs(status) {
+      if (!nameInput.value) {
+        showStatus('⚠️ No student found for this register number.', 'error');
+        return;
+      }
+      statusFld.value = status;
+      if (status === 'present') {
+        document.getElementById('btn-present').textContent = '⏳ Marking Present…';
+        document.getElementById('btn-present').disabled = true;
+      } else {
+        document.getElementById('btn-absent').textContent = '⏳ Marking Absent…';
+        document.getElementById('btn-absent').disabled = true;
+      }
+      form.submit();
+    }
+  </script>
 
 </body>
+
 </html>

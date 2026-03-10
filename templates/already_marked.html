@@ -1,30 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Already Marked — AI&amp;DS</title>
+  <title>Already Recorded — AI&amp;DS</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
 
-<div class="page-center">
-  <div class="card info-card">
-
-    <span class="info-icon">ℹ️</span>
-    <h1>Already Marked</h1>
-    <p>Your attendance for today has already been recorded.</p>
-    <br>
-    <p style="color:var(--text-light); font-size:0.82rem;">
-      You can only mark attendance once per day.
-    </p>
-
-    <a href="/" class="btn btn-primary" style="margin-top:24px;">
-      ← Back to Portal
-    </a>
-
+  <div class="page-center">
+    <div class="card info-card">
+      <span class="info-icon">⚠️</span>
+      <h1>Already Recorded</h1>
+      {% if prev_status == 'absent' %}
+      <p>Your <strong>absence</strong> has already been recorded for today.</p>
+      {% else %}
+      <p>Your <strong>attendance</strong> has already been marked for today.</p>
+      {% endif %}
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 8px;">
+        You can only submit once per day.
+      </p>
+    </div>
   </div>
-</div>
 
 </body>
+
 </html>

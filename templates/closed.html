@@ -1,31 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portal Closed — AI&amp;DS</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
 
-<div class="page-center">
-  <div class="card info-card">
+  <div class="page-center">
+    <div class="card info-card">
 
-    <span class="info-icon">🕐</span>
-    <h1>Portal Closed</h1>
-    <p>Attendance marking is only available between</p>
-    <p><strong>7:30 AM – 9:45 AM</strong></p>
-    <br>
-    <p style="color:var(--text-light); font-size:0.82rem;">
-      Please try again during the allowed window.
-    </p>
+      <span class="info-icon">🕐</span>
+      <h1>Portal Closed</h1>
+      <p>Attendance marking is only available between</p>
+      <p><strong>{{ open_time }} – {{ close_time }}</strong></p>
+      <br>
+      <p style="color:var(--text-light); font-size:0.82rem;">
+        Please try again during the allowed window.
+      </p>
 
-    <a href="/admin_login" class="link-subtle" style="margin-top:24px;">
-      <span>Admin Login</span> →
-    </a>
+      <a href="/admin_login" class="link-subtle" style="margin-top:24px;">
+        <span>Admin Login</span> →
+      </a>
 
+    </div>
   </div>
-</div>
 
 </body>
+
 </html>
