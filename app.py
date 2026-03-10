@@ -200,6 +200,11 @@ def logout():
     session.pop("admin", None)
     return redirect("/admin_login")
 
+@app.route("/check-time")
+def check_time():
+    from datetime import datetime
+    return str(datetime.now())
+
 
 # ----------------------------
 # Run App
